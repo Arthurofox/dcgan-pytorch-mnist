@@ -11,10 +11,11 @@ class Config:
     ndf = 64             # Discriminator feature map size
 
     # Training hyperparameters
-    num_epochs = 25
+    num_epochs = 5
     batch_size = 128
     lr = 0.0002
     beta1 = 0.5          # Beta1 hyperparam for Adam optimizer
 
     # Device configuration
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+

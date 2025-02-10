@@ -10,6 +10,11 @@ from utils import get_dataloader
 from models.generator import Generator
 from models.discriminator import Discriminator
 
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+else:
+    device = torch.device("cpu")
+
 def weights_init(m):
     """Custom weights initialization."""
     classname = m.__class__.__name__
