@@ -10,10 +10,6 @@ from utils import get_dataloader
 from models.generator import Generator
 from models.discriminator import Discriminator
 
-if torch.backends.mps.is_available():
-    device = torch.device("mps")
-else:
-    device = torch.device("cpu")
 
 def weights_init(m):
     """Custom weights initialization."""
@@ -95,14 +91,19 @@ def main():
                       f"Loss_D: {errD.item():.4f} Loss_G: {errG.item():.4f} "
                       f"D(x): {D_x:.4f} D(G(z)): {D_G_z1:.4f} / {D_G_z2:.4f}")
 
-        # Save generated images for inspection
+        # Save generated images for inspection at the end of each epoch
         with torch.no_grad():
             fake = netG(fixed_noise).detach().cpu()
         vutils.save_image(fake, f'outputs/fake_samples_epoch_{epoch+1}.png', normalize=True)
 
-        # Save model checkpoints (optional)
+        # Optionally, save model checkpoints after each epoch
         torch.save(netG.state_dict(), f'outputs/netG_epoch_{epoch+1}.pth')
         torch.save(netD.state_dict(), f'outputs/netD_epoch_{epoch+1}.pth')
+
+    # Save final models after training is complete
+    torch.save(netG.state_dict(), 'outputs/netG_final.pth')
+    torch.save(netD.state_dict(), 'outputs/netD_final.pth')
+    print("Final models saved as outputs/netG_final.pth and outputs/netD_final.pth")
 
 if __name__ == "__main__":
     main()
